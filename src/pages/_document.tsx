@@ -13,7 +13,7 @@ export default function Document() {
         <script src="https://unpkg.com/@videojs/http-streaming@3.10.0/dist/videojs-http-streaming.js" defer></script>
     
         <title>seiku loves nica</title>
-        <meta name="og:description" content="quero ver anime sem pagar nada 😋😊" />
+        <meta name="og:description" content="quero ver anime sem pagar nada 😋😊 e nao adianta nem me precurar em outros timbresd e outros risos, eu estavia aki o tmp todo, so vc n viu 😂" />
         <meta name="og:image" content="https://i.etsystatic.com/27654312/r/il/c6ece3/4660008078/il_570xN.4660008078_5nhr.jpg" />
         <meta name="theme-color" content="#242424" />
 
