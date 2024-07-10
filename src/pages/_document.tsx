@@ -14,6 +14,8 @@ export default function Document() {
     
         <title>seiku loves nica</title>
         <meta name="og:description" content="quero ver anime sem pagar nada 😋😊 e nao adianta nem me precurar em outros timbresd e outros risos, eu estavia aki o tmp todo, so vc n viu 😂" />
+        <meta name="og:description" content="madoka animes 3.0 agora vai" />
+
         <meta name="og:image" content="https://i.etsystatic.com/27654312/r/il/c6ece3/4660008078/il_570xN.4660008078_5nhr.jpg" />
         <meta name="theme-color" content="#242424" />
 
