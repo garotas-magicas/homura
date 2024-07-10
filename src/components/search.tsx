@@ -14,7 +14,7 @@ function SearchBar() {
 
     return (
         <div className=" bg-madoka-black">
-            
+
             <div className="w-100 justify-center flex flex-col items-center">
                 <div className="flex gap-3">
                     <p className="font-bold text-madoka-pink">nome</p>
@@ -50,7 +50,7 @@ function SearchContainer(props: { term: string | undefined }) {
 
     // avoid api flood
     useEffect(() => {
-        
+
         const timer = setTimeout(async () => {
             if (!props.term) {
                 setPromotions(undefined)
@@ -73,7 +73,7 @@ function SearchContainer(props: { term: string | undefined }) {
         <div className="bg-madoka-black">
             {loading && !promotions ? <p className="text-madoka-pink">Carregando...</p> : (
                 <div className="flex justify-center flex-wrap bg-madoka-black">
-                    {promotions?.data.map((result) => {
+                    {promotions && promotions.data ? promotions?.data.map((result) => {
                         return (
                             <div key={result.id} className="m-5 border-madoka-salmon border-[1px] rounded-sm p-5 w-[300px] flex flex-col justify-between h-[500px]">
                                 <div>
@@ -88,7 +88,7 @@ function SearchContainer(props: { term: string | undefined }) {
                                 <button onClick={() => { window.location.href = `/foguinho/${result.slug}` }} className="bg-madoka-pink text-madoka-black p-2 rounded-sm mt-4 self-end">ver 🔥</button>
                             </div>
                         )
-                    })}
+                    }) : <p className="text-madoka-pink"></p>}
                 </div>
             )}
         </div>
