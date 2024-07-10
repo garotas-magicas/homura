@@ -21,7 +21,7 @@ export async function getServerSideProps({ params }: any) {
 }
 
 
-export default async function Page({ data }: { data: AnimeResult }) {
+export default function Page({ data }: { data: AnimeResult }) {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
 
