@@ -21,7 +21,7 @@ export async function getServerSideProps({ params }: any) {
 }
 
 
-export default function Page({ data }: { data: AnimeResult }) {
+export default async function Page({ data }: { data: AnimeResult }) {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
 
@@ -43,8 +43,6 @@ export default function Page({ data }: { data: AnimeResult }) {
     };
 
     return <>
-        <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet" />
-        <script src="http://vjs.zencdn.net/4.12/video.js"></script>
         <div className="w-full flex items-center justify-center flex-col gap-5" >
             <div className="pt-32 flex justify-center flex-wrap" style={{ maxWidth: '33.3333%', margin: 'auto' }}>
                 {data.data.reverse().map((episode) => (
