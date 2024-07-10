@@ -21,7 +21,7 @@ function SearchBar() {
                     <p className="font-black text-madoka-salmon">(do anime) 👇</p>
                 </div>
 
-                <input onChange={(e) => { handleSearch(e) }} className="p-2 rounded-sm bg-madoka-black border-b-[2px] border-madoka-pink text-purple-600 focus:outline-none" value={term} type="text" name="" id="term" placeholder="(>//<)" />
+                <input onChange={(e) => { handleSearch(e) }} className="p-2 rounded-sm bg-madoka-black border-b-[2px] border-madoka-pink text-purple-600 focus:outline-none" value={term} type="text" name="" id="term" placeholder="d-digite em mi(>//<)" />
 
             </div>
             <SearchContainer term={term} />
@@ -82,7 +82,7 @@ function SearchContainer(props: { term: string | undefined }) {
                                         <img src={`https://static.anroll.net/images/animes/capas/${result.slug}.jpg?format=webp&width=450&height=676`} alt={result.title} className="w-full h-full object-cover rounded-sm" />
                                     </div>
                                     <h2 className="font-black text-madoka-pink">{result.title}</h2>
-                                    <p className="line-clamp-4">{result.synopsis}</p>
+                                    <p className="line-clamp-4 text-madoka-yellow">{result.synopsis}</p>
                                     <p>Episodes: {result.total_eps}</p>
                                 </div>
                                 <button onClick={() => { window.location.href = `/foguinho/${result.slug}` }} className="bg-madoka-pink text-madoka-black p-2 rounded-sm mt-4 self-end">ver 🔥</button>

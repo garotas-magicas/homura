@@ -42,26 +42,28 @@ export default function Page({ data }: { data: AnimeResult }) {
         });
     };
 
-    return <>
+    return <div>
         <div className="w-full flex items-center justify-center flex-col gap-5" >
-            <div className="pt-32 flex justify-center flex-wrap" style={{ maxWidth: '33.3333%', margin: 'auto' }}>
-                {data.data.reverse().map((episode) => (
-                    <div key={episode.id_series_episodios} className="m-5 flex justify-center items-center">
-                        <div className="flex flex-col md:flex-row items-center justify-center bg-white shadow-md rounded-lg overflow-hidden">
-                            <div className="flex justify-center items-center w-full md:w-1/2">
-                                <img src={`https://static.anroll.net/images/animes/screens/${episode.anime.slug_serie}/${episode.n_episodio}.jpg`} alt="Episode Image" className="object-cover" />
-                            </div>
-                            <div className="p-4 w-full md:w-1/2">
-                                <div className='flex gap-3'>
-                                    <h1 className="text-madoka-pink text-lg font-bold">{episode.titulo_episodio == 'N/A' || episode.titulo_episodio == '...' ? "Episódio" : episode.titulo_episodio}</h1>
-                                    <h1 className='text-madoka-salmon font-black'>({episode.n_episodio})</h1>
+            <div className="flex items-center justify-center flex-col gap-5 min-h-screen w-full">
+                <div className="pt-32 flex justify-center flex-wrap w-full sm:w-[90%] md:w-[75%] lg:w-[60%] xl:w-1/3 m-auto">
+                    {data.data.reverse().map((episode) => (
+                        <div key={episode.id_series_episodios} className="m-5 flex justify-center items-center">
+                            <div className="flex flex-col md:flex-row items-center justify-center bg-white shadow-md rounded-lg overflow-hidden">
+                                <div className="flex justify-center items-center w-full md:w-1/2">
+                                    <img src={`https://static.anroll.net/images/animes/screens/${episode.anime.slug_serie}/${episode.n_episodio}.jpg`} alt="Episode Image" className="object-cover" />
                                 </div>
-                                <p className="text-madoka-pink mt-2">{episode.sinopse_episodio}</p>
-                                <button onClick={() => handleWatchClick(episode.anime.titulo, episode.n_episodio, episode.link)} className="text-madoka-pink underline mt-4 inline-block">Assistir</button>
+                                <div className="p-4 w-full md:w-1/2">
+                                    <div className='flex gap-3'>
+                                        <h1 className="text-madoka-pink text-lg font-bold">{episode.titulo_episodio == 'N/A' || episode.titulo_episodio == '...' ? "Episódio" : episode.titulo_episodio}</h1>
+                                        <h1 className='text-madoka-salmon font-black'>({episode.n_episodio})</h1>
+                                    </div>
+                                    <p className="text-madoka-pink mt-2">{episode.sinopse_episodio}</p>
+                                    <button onClick={() => handleWatchClick(episode.anime.titulo, episode.n_episodio, episode.link)} className="text-madoka-pink underline mt-4 inline-block">Assistir</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
         {isPopupVisible && (
@@ -81,6 +83,5 @@ export default function Page({ data }: { data: AnimeResult }) {
                 </div>
             </div>
         )}
-        <pre>{JSON.stringify(data, undefined, 2)}</pre>
-    </>;
+    </div>;
 }
