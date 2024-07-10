@@ -45,7 +45,7 @@ export default function Page({ data }: { data: AnimeResult }) {
                             </div>
                             <div className="p-4 w-full md:w-1/2">
                                 <div className='flex gap-3'>
-                                    <h1 className="text-madoka-pink text-lg font-bold">{episode.titulo_episodio}</h1>
+                                    <h1 className="text-madoka-pink text-lg font-bold">{episode.titulo_episodio == 'N/A' ? "Episódio" : episode.titulo_episodio}</h1>
                                     <h1 className='text-madoka-salmon font-black'>({episode.n_episodio})</h1>
                                 </div>
                                 <p className="text-madoka-pink mt-2">{episode.sinopse_episodio}</p>
@@ -64,5 +64,6 @@ export default function Page({ data }: { data: AnimeResult }) {
                 </div>
             </div>
         )}
+        <pre>{JSON.stringify(data, undefined, 2)}</pre>
     </>;
 }
