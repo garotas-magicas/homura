@@ -13,7 +13,7 @@ function SearchBar() {
     }
 
     return (
-        <>
+        <div className=" bg-madoka-black">
             
             <div className="w-100 justify-center flex flex-col items-center">
                 <div className="flex gap-3">
@@ -25,7 +25,7 @@ function SearchBar() {
 
             </div>
             <SearchContainer term={term} />
-        </>
+        </div>
 
     )
 }
@@ -69,9 +69,9 @@ function SearchContainer(props: { term: string | undefined }) {
 
 
     return (
-        <>
+        <div className="bg-madoka-black">
             {loading && !promotions ? <p className="text-madoka-pink">Carregando...</p> : (
-                <div className="flex justify-center flex-wrap">
+                <div className="flex justify-center flex-wrap bg-madoka-black">
                     {promotions?.data.map((result) => {
                         return (
                             <div key={result.id} className="m-5 border-madoka-salmon border-[1px] rounded-sm p-5 w-[300px] flex flex-col justify-between h-[500px]">
@@ -80,7 +80,7 @@ function SearchContainer(props: { term: string | undefined }) {
                                         {/* Placeholder for image */}
                                         <img src={`https://static.anroll.net/images/animes/capas/${result.slug}.jpg?format=webp&width=450&height=676`} alt={result.title} className="w-full h-full object-cover rounded-sm" />
                                     </div>
-                                    <h2>{result.title}</h2>
+                                    <h2 className="font-black text-madoka-pink">{result.title}</h2>
                                     <p className="line-clamp-4">{result.synopsis}</p>
                                     <p>Episodes: {result.total_eps}</p>
                                 </div>
@@ -90,7 +90,7 @@ function SearchContainer(props: { term: string | undefined }) {
                     })}
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
