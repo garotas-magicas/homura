@@ -1,9 +1,13 @@
 
 import { AnimeResult } from '@/interfaces/AnimeResult'
+import { useState, useRef } from 'react'
+import videojs from 'video.js'
+import Player from '@/components/player'
+
 
 async function fetchAnime(slug: string) {
     const params = new URLSearchParams({ q: slug }).toString()
-    const response = await fetch(`http://144.22.255.181:3030/api/anime?${params}`)
+    const response = await fetch(`https://api.nicashow.fun/enma/anime?${params}`)
     const data = await response.json() as AnimeResult
 
     return data
@@ -17,25 +21,31 @@ export async function getServerSideProps({ params }: any) {
 }
 
 
-import React, { useState } from 'react';
-import ReactPlayer from 'react-player'
-
 export default function Page({ data }: { data: AnimeResult }) {
-    // State for managing popup visibility and video URL
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
 
-    // Event handler for the "Assistir" button
     const handleWatchClick = (animeTitle: string, episodeNumber: string) => {
-        const encodedTitle = encodeURIComponent(animeTitle);
-        const url = `http://144.22.255.181:3030/?q=${encodedTitle}&p=${episodeNumber}`;
-
-        setVideoUrl(url);
+        setVideoUrl(`https://api.nicashow.fun/player/episode/naruto-classico/001.m3u8`);
         setPopupVisible(true);
     };
 
+    const playerRef = useRef(null);
+    const handlePlayerReady = (player: any) => {
+        playerRef.current = player;
+        player.on('waiting', () => {
+            videojs.log('player is waiting');
+        });
+
+        player.on('dispose', () => {
+            videojs.log('player will dispose');
+        });
+    };
+
     return <>
-        <div className="w-full flex items-center justify-center flex-col gap-5">
+        <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet" />
+        <script src="http://vjs.zencdn.net/4.12/video.js"></script>
+        <div className="w-full flex items-center justify-center flex-col gap-5" >
             <div className="pt-32 flex justify-center flex-wrap" style={{ maxWidth: '33.3333%', margin: 'auto' }}>
                 {data.data.reverse().map((episode) => (
                     <div key={episode.id_series_episodios} className="m-5 flex justify-center items-center">
@@ -59,7 +69,16 @@ export default function Page({ data }: { data: AnimeResult }) {
         {isPopupVisible && (
             <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
                 <div className="bg-white p-4 rounded-lg">
-                    <iframe src={videoUrl} title="Video Player" width="1366" height="768"></iframe>
+                    <Player options={{
+                        autoplay: true,
+                        controls: true,
+                        responsive: true,
+                        fluid: true,
+                        sources: [{
+                            src: videoUrl,
+                            type: 'application/x-mpegURL'
+                        }]
+                    }} onReady={handlePlayerReady} />
                     <button onClick={() => setPopupVisible(false)}>fecha carai kkk</button>
                 </div>
             </div>

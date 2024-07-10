@@ -32,7 +32,7 @@ function SearchBar() {
 
 async function searchInApi(term: string) {
     const params = new URLSearchParams({ q: term }).toString()
-    const response = await fetch("http://144.22.255.181:3030/api/search?" + params)
+    const response = await fetch("https://api.nicashow.fun/enma/search?" + params)
 
     const data = await response.json()
     return data
