@@ -23,7 +23,7 @@ export interface AnimeEpisode {
   n_episodio: string
   titulo_episodio: string
   sinopse_episodio: string
-  link: any
+  link: string
   v_stream: any
   aviso: string
   generate_id: string

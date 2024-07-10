@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
 
 export default function Player(props: any) {
-    const videoRef = React.useRef<any>(null);
-    const playerRef = React.useRef<any>(null);
+    const videoRef = useRef<any>(null);
+    const playerRef = useRef<any>(null);
     const { options, onReady } = props;
 
     useEffect(() => {
@@ -40,7 +39,7 @@ export default function Player(props: any) {
     }, [playerRef]);
 
     return (
-        <div data-vjs-player>
+        <div data-vjs-player className='w-100'>
             <div ref={videoRef} />
         </div>
     );

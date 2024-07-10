@@ -25,8 +25,8 @@ export default function Page({ data }: { data: AnimeResult }) {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
 
-    const handleWatchClick = (animeTitle: string, episodeNumber: string) => {
-        setVideoUrl(`https://api.nicashow.fun/player/episode/naruto-classico/001.m3u8`);
+    const handleWatchClick = (animeTitle: string, episodeNumber: string, url: string) => {
+        setVideoUrl(url);
         setPopupVisible(true);
     };
 
@@ -59,7 +59,7 @@ export default function Page({ data }: { data: AnimeResult }) {
                                     <h1 className='text-madoka-salmon font-black'>({episode.n_episodio})</h1>
                                 </div>
                                 <p className="text-madoka-pink mt-2">{episode.sinopse_episodio}</p>
-                                <button onClick={() => handleWatchClick(episode.anime.slug_serie, episode.n_episodio)} className="text-madoka-pink underline mt-4 inline-block">Assistir</button>
+                                <button onClick={() => handleWatchClick(episode.anime.titulo, episode.n_episodio, episode.link)} className="text-madoka-pink underline mt-4 inline-block">Assistir</button>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export default function Page({ data }: { data: AnimeResult }) {
         </div>
         {isPopupVisible && (
             <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-4 rounded-lg">
+                <div className="bg-white p-4 rounded-lg w-8/12">
                     <Player options={{
                         autoplay: true,
                         controls: true,

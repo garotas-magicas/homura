@@ -50,6 +50,7 @@ function SearchContainer(props: { term: string | undefined }) {
 
     // avoid api flood
     useEffect(() => {
+        
         const timer = setTimeout(async () => {
             if (!props.term) {
                 setPromotions(undefined)
@@ -84,7 +85,7 @@ function SearchContainer(props: { term: string | undefined }) {
                                     <p className="line-clamp-4">{result.synopsis}</p>
                                     <p>Episodes: {result.total_eps}</p>
                                 </div>
-                                <button onClick={() => { window.location.href = `/foguinho/${result.title}` }} className="bg-madoka-pink text-madoka-black p-2 rounded-sm mt-4 self-end">ver 🔥</button>
+                                <button onClick={() => { window.location.href = `/foguinho/${result.slug}` }} className="bg-madoka-pink text-madoka-black p-2 rounded-sm mt-4 self-end">ver 🔥</button>
                             </div>
                         )
                     })}
