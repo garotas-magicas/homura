@@ -26,7 +26,7 @@ export default function Page({ data }: { data: AnimeResult }) {
     const [videoUrl, setVideoUrl] = useState('');
 
     const handleWatchClick = (animeTitle: string, episodeNumber: string, url: string) => {
-        setVideoUrl(url);
+        setVideoUrl(`https://api.nicashow.fun/enma/episode${url.split("/episode")[1]}`);
         setPopupVisible(true);
     };
 
