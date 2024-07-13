@@ -5,6 +5,7 @@ import videojs from 'video.js'
 import Player from '@/components/player'
 import { Result, SearchResult } from '@/interfaces/SearchResult'
 import { Metadata } from 'next'
+import Head from 'next/head'
 
 async function fetchAnime(slug: string) {
     const params = new URLSearchParams({ q: slug }).toString()
@@ -23,23 +24,15 @@ export async function getServerSideProps({ params }: any) {
     return { props: { data, info } }
 }
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-    const { data, info } = await fetchAnime(params.slug)
-    return {
-
-        title: info.title,
-        description: info.synopsis,
-        manifest: `{
-              images: [{url: "${info.image}"}],
-              themeColor: "#e88bc1",
-            }`,
-    };
-
-}
-
 export default function Page({ data, info }: { data: AnimeResult, info: Result }) {
     return (
         <div className='flex flex-col h-screen w-screen bg-madoka-black font-ubuntu mt-10'>
+            <Head>
+                <title>{info.title}</title>
+                <meta name="og:description" content={info.synopsis} />
+                <meta name="og:title" content={info.title} />
+                <meta name="og:image" content={info.image} />
+            </Head>
             <div className="flex justify-center items-center w-full">
                 <div className="text-center flex w-1/3 justify-center align-middle">
                     <div className='my-auto'>
