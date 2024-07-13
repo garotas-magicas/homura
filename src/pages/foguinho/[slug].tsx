@@ -23,18 +23,18 @@ export async function getServerSideProps({ params }: any) {
     return { props: { data, info } }
 }
 
-export async function generateMetadata({ params }: any) {
+export async function generateMetadata({ params }: any): Promise<Metadata> {
     const { data, info } = await fetchAnime(params.slug)
     return {
+
         title: info.title,
         description: info.synopsis,
-        image: info.image,
-        url: "https://anime.seiku.fun/foguinho/" + info.slug,
-        type: "website",
-        themeColor: "#e88bc1",
-        site_name: "madoka animes 3.0",
-        locale: "pt_BR",
-      } as Metadata;
+        manifest: `{
+              images: [{url: "${info.image}"}],
+              themeColor: "#e88bc1",
+            }`,
+    };
+
 }
 
 export default function Page({ data, info }: { data: AnimeResult, info: Result }) {
