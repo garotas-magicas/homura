@@ -39,8 +39,6 @@ export default function Player(props: any) {
     }, [playerRef]);
 
     return (
-        <div data-vjs-player className='w-100'>
-            <div ref={videoRef} />
-        </div>
+        <div ref={videoRef} data-vjs-player style={{ width: '100%', height: '100%' }} />
     );
 }

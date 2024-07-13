@@ -21,7 +21,7 @@ function SearchBar() {
                     <p className="font-black text-madoka-salmon">(do anime) 👇</p>
                 </div>
 
-                <input onChange={(e) => { handleSearch(e) }} className="p-2 rounded-sm bg-madoka-black border-b-[2px] border-madoka-pink text-purple-600 focus:outline-none" value={term} type="text" name="" id="term" placeholder="d-digite em mi(>//<)" />
+                <input onChange={(e) => { handleSearch(e) }} className="p-2 rounded-sm bg-madoka-black border-b-[2px] border-madoka-pink focus:outline-none" value={term} type="text" name="" id="term" placeholder="d-digite em mi(>//<)" />
 
             </div>
             <SearchContainer term={term} />

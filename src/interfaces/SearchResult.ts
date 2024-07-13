@@ -14,4 +14,5 @@ export interface Result {
     gen_id: string
     friendly_path: string
     generic_path: string
+    image: string
 }
