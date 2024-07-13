@@ -70,7 +70,7 @@ function PlayerContainer({ data }: { data: AnimeResult }) {
             <div className='flex flex-col md:w-1/4 overflow-y-scroll'>
                 {data.data.reverse().map(episode => {
                     return (
-                        <div className='flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4' onClick={() => { setVideoUrl(episode.link) }}>
+                        <div key={episode.n_episodio} className='flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4' onClick={() => { setVideoUrl(episode.link) }}>
                             <h1 className=''>{episode.titulo_episodio == "Sem título" || episode.titulo_episodio == "..." ? "Episódio" : episode.titulo_episodio}</h1>
                             <p className='font-bold'>{episode.n_episodio}</p>
                         </div>
