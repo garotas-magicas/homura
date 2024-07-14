@@ -26,7 +26,8 @@ export async function getServerSideProps({ params }: any) {
 
 export default function Page({ data, info }: { data: AnimeResult, info: Result }) {
     return (
-        <div className='flex flex-col h-screen w-screen bg-madoka-black font-ubuntu mt-10'>
+        
+        <div className='flex flex-col h-screen bg-madoka-black font-ubuntu mt-10'>
             <Head>
                 <title>{info.title}</title>
                 <meta name="og:description" content={info.synopsis} />
@@ -34,7 +35,7 @@ export default function Page({ data, info }: { data: AnimeResult, info: Result }
                 <meta name="og:image" content={info.image} />
             </Head>
             <div className="flex justify-center items-center w-full">
-                <div className="text-center flex w-1/3 justify-center align-middle">
+                <div className="text-center flex w-2/3 md:w-1/3 justify-center align-middle flex-col md:flex-row">
                     <div className='my-auto'>
                         <img src={info.image} className="w-screen" />
                     </div>
@@ -72,7 +73,7 @@ function PlayerContainer({ data }: { data: AnimeResult }) {
 
     return <div className='flex w-100 h-screen justify-center align-middle bg-madoka-black font-ubuntu'>
         <div className='flex flex-col-reverse md:flex-row m-auto md:h-2/4 md:w-2/3'>
-            <div className='flex flex-col md:w-1/4 overflow-y-scroll'>
+            <div className='flex flex-col md:w-1/4 h-[200px] md:h-full overflow-y-scroll'>
                 {data.data.reverse().map(episode => {
                     return (
                         <div key={episode.n_episodio} className='flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4' onClick={() => { setVideoUrl(episode.link) }}>
