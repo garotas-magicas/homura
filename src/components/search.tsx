@@ -79,7 +79,7 @@ function SearchContainer(props: { term: string | undefined }) {
                                 <div>
                                     <div className="mb-5 h-[200px]">
                                         {/* Placeholder for image */}
-                                        <img src={`https://static.anroll.net/images/animes/capas/${result.slug}.jpg?format=webp&width=450&height=676`} alt={result.title} className="w-full h-full object-cover rounded-sm" />
+                                        <img src={`${result.image}?format=webp&width=450&height=676`} alt={result.title} className="w-full h-full object-cover rounded-sm" />
                                     </div>
                                     <h2 className="font-black text-madoka-pink">{result.title}</h2>
                                     <p className="line-clamp-4 text-madoka-yellow">{result.synopsis}</p>
