@@ -116,7 +116,7 @@ function PlayerContainer({ slug }: { slug: string }) {
   return (
     <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
       <div className="flex flex-col-reverse md:flex-row m-auto md:h-2/4 md:w-2/3">
-        {!animeData || !animeData.data || !currentWatchingAnime || 1 == 1 ? (
+        {!animeData || !animeData.data || !currentWatchingAnime ? (
           <Loader />
         ) : (
           <>
