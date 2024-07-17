@@ -1,25 +1,32 @@
 import { AnimeResult } from "@/interfaces/AnimeResult";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import videojs from "video.js";
 import Player from "@/components/player";
 import { Result, SearchResult } from "@/interfaces/SearchResult";
 import { Metadata } from "next";
 import Head from "next/head";
 
-async function fetchAnime(slug: string) {
-  const params = new URLSearchParams({ q: slug }).toString();
+async function fetchAnimeData(slug: string, page?: string) {
+  const params = new URLSearchParams({ q: slug, p: page ?? "1" }).toString();
 
   const anime = await fetch(`https://api.nicashow.fun/enma/anime?${params}`);
   const animeData = (await anime.json()) as AnimeResult;
 
-  const info = await fetch(`https://api.nicashow.fun/enma/search?${params}`);
-  const infoData = (await info.json()) as SearchResult;
+  return animeData;
+}
 
-  return { data: animeData, info: infoData.data[0] };
+async function fetchAnimeInfo(slug: string) {
+  const params = new URLSearchParams({ q: slug }).toString();
+
+  const anime = await fetch(`https://api.nicashow.fun/enma/search?${params}`);
+  const animeInfo = (await anime.json()) as SearchResult;
+
+  return animeInfo.data[0];
 }
 
 export async function getServerSideProps({ params }: any) {
-  const { data, info } = await fetchAnime(params.slug);
+  const info = await fetchAnimeInfo(params.slug);
+  const data = await fetchAnimeData(params.slug);
   return { props: { data, info } };
 }
 
@@ -49,22 +56,22 @@ export default function Page({
           </div>
         </div>
       </div>
-      <PlayerContainer data={data} />
+      <PlayerContainer slug={info.slug} />
     </div>
   );
 }
 
-function PlayerContainer({ data }: { data: AnimeResult }) {
+function PlayerContainer({ slug }: { slug: string }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [currentWatchingAnine, setCurrentWatchingAnime] = useState<{
-    animeTitle: string;
-    episodeNumber: string;
-    url: string;
-  }>({
-    animeTitle: data.data[0].titulo_episodio,
-    episodeNumber: data.data[0].n_episodio,
-    url: data.data[0].link,
-  });
+  const [animeData, setAnimeData] = useState<AnimeResult>();
+  const [currentWatchingAnime, setCurrentWatchingAnime] = useState<
+    | {
+        animeTitle: string;
+        episodeNumber: string;
+        url: string;
+      }
+    | undefined
+  >();
 
   const handleWatchClick = (
     animeTitle: string,
@@ -91,52 +98,76 @@ function PlayerContainer({ data }: { data: AnimeResult }) {
     });
   };
 
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchAnimeData(slug);
+      setAnimeData(response);
+      handleWatchClick(
+        response.data[0].anime.titulo,
+        "001",
+        response.data[0].link,
+      );
+    };
+
+    fetch();
+  }, [slug]);
+
   return (
     <div className="flex w-100 h-screen justify-center align-middle bg-madoka-black font-ubuntu">
       <div className="flex flex-col-reverse md:flex-row m-auto md:h-2/4 md:w-2/3">
         <div className="flex flex-col md:w-1/4 h-[200px] md:h-full overflow-y-scroll">
-          {data.data.map((episode) => {
-            return (
-              <div
-                key={episode.n_episodio}
-                className="flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4"
-                onClick={() => {
-                  handleWatchClick(
-                    episode.titulo_episodio,
-                    episode.n_episodio,
-                    episode.link,
-                  );
-                }}
-              >
-                <h1 className="">
-                  {episode.titulo_episodio == "Sem título" ||
-                  episode.titulo_episodio == "..."
-                    ? "Episódio"
-                    : episode.titulo_episodio}
-                </h1>
-                <p className="font-bold">{episode.n_episodio}</p>
-              </div>
-            );
-          })}
+          {!animeData || !animeData.data
+            ? "Calma"
+            : animeData.data.map((episode) => {
+                return (
+                  <div
+                    key={episode.n_episodio}
+                    className="flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4"
+                    onClick={() => {
+                      handleWatchClick(
+                        episode.titulo_episodio,
+                        episode.n_episodio,
+                        episode.link,
+                      );
+                    }}
+                  >
+                    <h1 className="">
+                      {episode.titulo_episodio == "Sem título" ||
+                      episode.titulo_episodio == "..."
+                        ? "Episódio"
+                        : episode.titulo_episodio}
+                    </h1>
+                    <p className="font-bold">{episode.n_episodio}</p>
+                  </div>
+                );
+              })}
         </div>
         <div className="w-full flex justify-center align-middle">
           <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
-            <p>Episódio {currentWatchingAnine.episodeNumber}</p>
-            <Player
-              options={{
-                autoplay: true,
-                controls: true,
-                responsive: true,
-                fluid: true,
-                sources: [
-                  {
-                    src: currentWatchingAnine.url,
-                    type: "application/x-mpegURL",
-                  },
-                ],
-              }}
-              onReady={handlePlayerReady}
-            />
+            {!currentWatchingAnime ? (
+              "..."
+            ) : (
+              <>
+                <Player
+                  options={{
+                    autoplay: true,
+                    controls: true,
+                    responsive: true,
+                    fluid: true,
+                    sources: [
+                      {
+                        src: currentWatchingAnime.url,
+                        type: "application/x-mpegURL",
+                      },
+                    ],
+                  }}
+                  onReady={handlePlayerReady}
+                />
+                <p className="text-center mt-2 font-black">
+                  Episódio {currentWatchingAnime.episodeNumber}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
