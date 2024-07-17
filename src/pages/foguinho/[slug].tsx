@@ -80,6 +80,7 @@ function PlayerContainer({ slug }: { slug: string }) {
   const [episodes, setEpisodes] = useState<AnimeEpisode[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
+  const [searching, setSearching] = useState(false);
 
   const [currentWatchingAnime, setCurrentWatchingAnime] = useState<
     | {
@@ -117,17 +118,47 @@ function PlayerContainer({ slug }: { slug: string }) {
 
   const fetch = async () => {
     const response = await fetchAnimeData(slug, `${index}`);
-    setIndex(index + 1);
-    setHasMore(response.meta.hasNextPage);
-    setAnimeData(response);
-    setEpisodes((prev) => [...prev, ...response.data]);
+    // pode tirar esse if depois, só pra testar local
+    if ("meta" in response) {
+      setIndex(index + 1);
+      setHasMore(response.meta.hasNextPage);
+      setAnimeData(response);
+      setEpisodes((prev) => [...prev, ...response.data]);
 
-    handleWatchClick(
-      response.data[0].anime.titulo,
-      "001",
-      response.data[0].link,
-    );
+      handleWatchClick(
+        response.data[0].anime.titulo,
+        "001",
+        response.data[0].link,
+      );
+    }
   };
+
+  async function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.value) {
+      setSearching(false);
+      return;
+    }
+    setSearching(true);
+
+    const target = e.target.value.match(/-?\d+/);
+    if (!target) return;
+
+    // divido por 25 para pegar a página
+    const episodes = await fetchAnimeData(
+      slug,
+      `${Math.floor(parseInt(target[0], 10) / 25) + 1}`,
+    );
+
+    if ("meta" in episodes) {
+      setEpisodes(
+        episodes.data.filter(
+          (d) => parseInt(d.n_episodio) == parseInt(target[0]),
+        ),
+      );
+      setSearching(false);
+      return;
+    }
+  }
 
   useEffect(() => {
     fetch();
@@ -144,12 +175,25 @@ function PlayerContainer({ slug }: { slug: string }) {
               className="flex flex-col md:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 md:mb-0"
               id="scrollable-div"
             >
-              <EpisodesContainer
-                episodes={episodes}
-                hasMore={hasMore}
-                fetch={fetch}
-                clickHandler={handleWatchClick}
-              ></EpisodesContainer>
+              <input
+                className="bg-madoka-black border-[1px] border-madoka-pink rounded-md mx-2 px-2"
+                placeholder="n-numero do episodi ≽^•⩊•^≼"
+                onChange={handleSearch}
+                onEmptied={() => {
+                  setSearching(false);
+                }}
+                type="text"
+              ></input>
+              {searching ? (
+                ""
+              ) : (
+                <EpisodesContainer
+                  episodes={episodes}
+                  hasMore={hasMore}
+                  fetch={fetch}
+                  clickHandler={handleWatchClick}
+                ></EpisodesContainer>
+              )}
             </div>
 
             <div className="w-full flex justify-center align-middle">
