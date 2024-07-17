@@ -46,18 +46,19 @@ export default function Page({
         <meta name="og:title" content={info.title} />
         <meta name="og:image" content={info.image} />
       </Head>
-      <div className="flex justify-center items-center w-full">
-        <div className="text-center flex w-2/3 md:w-1/3 justify-center align-middle flex-col md:flex-row">
+      <PlayerContainer slug={info.slug} />
+
+      <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">
+        <div className="text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
           <div className="my-auto">
             <img src={info.image} className="w-screen" />
           </div>
           <div className="p-10">
-            <h1 className="text-xl font-bold mt-4">{info.title}</h1>
-            <p className="mt-2">{info.synopsis}</p>
+            <h1 className="text-xl font-bold mt-4 md:text-3xl">{info.title}</h1>
+            <p className="mt-2 md:text-2xl">{info.synopsis}</p>
           </div>
         </div>
       </div>
-      <PlayerContainer slug={info.slug} />
     </div>
   );
 }
@@ -115,17 +116,17 @@ function PlayerContainer({ slug }: { slug: string }) {
 
   return (
     <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
-      <div className="flex flex-col-reverse md:flex-row m-auto md:h-2/4 md:w-2/3">
+      <div className="flex flex-col-reverse md:flex-row m-auto md:h-3/4 md:w-2/3">
         {!animeData || !animeData.data || !currentWatchingAnime ? (
           <Loader />
         ) : (
           <>
-            <div className="flex flex-col md:w-1/4 h-[200px] md:h-full overflow-y-scroll">
-              {animeData.data.map((episode) => {
+            <div className="flex flex-col md:w-1/4 h-[400px] md:h-full overflow-y-scroll">
+              {animeData.data.map((episode, index) => {
                 return (
                   <div
                     key={episode.n_episodio}
-                    className="flex py-2 m-auto md:m-0 gap-2 cursor-pointer p-4"
+                    className={`flex py-2 justify-between md:m-0 gap-2 cursor-pointer p-4  ${index % 2 == 0 ? `bg-opacity-[2%] bg-madoka-yellow` : ""}`}
                     onClick={() => {
                       handleWatchClick(
                         episode.titulo_episodio,

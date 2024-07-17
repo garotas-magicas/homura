@@ -9,7 +9,7 @@ export default function Document() {
           href="https://vjs.zencdn.net/8.3.0/video-js.min.css"
           rel="stylesheet"
         />
-        <script src="https://vjs.zencdn.net/8.3.0/video.js" defer></script>\
+        <script src="https://vjs.zencdn.net/8.3.0/video.js" defer></script>
         <script src="https://vjs.zencdn.net/4.12/video.js" defer></script>
         <link
           href="https://vjs.zencdn.net/4.12/video-js.css"
