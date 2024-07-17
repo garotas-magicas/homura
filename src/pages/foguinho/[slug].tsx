@@ -146,7 +146,7 @@ function PlayerContainer({ slug }: { slug: string }) {
     // divido por 25 para pegar a página
     const episodes = await fetchAnimeData(
       slug,
-      `${Math.floor(parseInt(target[0], 10) / 25) + 1}`,
+      `${Math.ceil(parseInt(target[0]) / 25)}`,
     );
 
     if ("meta" in episodes) {
