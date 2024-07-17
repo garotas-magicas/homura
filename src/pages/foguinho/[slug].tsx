@@ -43,9 +43,19 @@ export default function Page({
     <div className="flex flex-col h-screen bg-madoka-black font-ubuntu mt-10">
       <Head>
         <title>{info.title}</title>
-        <meta name="og:description" content={info.synopsis} />
-        <meta name="og:title" content={info.title} />
-        <meta name="og:image" content={info.image} />
+        <meta
+          property="og:description"
+          name="og:description"
+          content={info.synopsis}
+        />
+        <meta property="og:title" name="og:title" content={info.title} />
+        <meta
+          property="og:image"
+          itemProp="image"
+          content={info.image}
+          name="og:image"
+        />
+        <meta property="og:type" content="website" />
       </Head>
 
       <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">

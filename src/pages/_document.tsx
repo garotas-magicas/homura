@@ -20,13 +20,17 @@ export default function Document() {
           defer
         ></script>
         <title>seiku loves nica</title>
+        <meta property="og:type" content="website" />
         <meta
+          property="og:description"
           name="og:description"
           content="quero ver anime sem pagar nada 😋😊 e nao adianta nem me precurar em outros timbresd e outros risos, eu estavia aki o tmp todo, so vc n viu 😂"
         />
         <meta name="og:title" content="madoka animes 3.0 agora vai" />
         <meta
+          property="og:image"
           name="og:image"
+          itemProp="image"
           content="https://64.media.tumblr.com/a1a55168a35270d62e863cf7271d7520/993851817e1a7bbe-64/s1280x1920/8feebb6bfe6276b05e7703dbc9cb00fee4f396cf.jpg"
         />
         <meta name="theme-color" content="#e88bc1" />
