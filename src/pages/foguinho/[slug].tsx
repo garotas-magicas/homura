@@ -131,7 +131,7 @@ function PlayerContainer({ slug }: { slug: string }) {
         ) : (
           <>
             <div
-              className="flex flex-col md:w-1/3 overflow-y-scroll mb-40 md:mb-0"
+              className="flex flex-col md:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 md:mb-0"
               id="scrollable-div"
             >
               <EpisodesContainer
