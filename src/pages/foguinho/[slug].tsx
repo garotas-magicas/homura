@@ -5,6 +5,7 @@ import Player from "@/components/player";
 import { Result, SearchResult } from "@/interfaces/SearchResult";
 import { Metadata } from "next";
 import Head from "next/head";
+import Loader from "@/components/loader";
 
 async function fetchAnimeData(slug: string, page?: string) {
   const params = new URLSearchParams({ q: slug, p: page ?? "1" }).toString();
@@ -113,12 +114,14 @@ function PlayerContainer({ slug }: { slug: string }) {
   }, [slug]);
 
   return (
-    <div className="flex w-100 h-screen justify-center align-middle bg-madoka-black font-ubuntu">
+    <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
       <div className="flex flex-col-reverse md:flex-row m-auto md:h-2/4 md:w-2/3">
-        <div className="flex flex-col md:w-1/4 h-[200px] md:h-full overflow-y-scroll">
-          {!animeData || !animeData.data
-            ? "Calma"
-            : animeData.data.map((episode) => {
+        {!animeData || !animeData.data || !currentWatchingAnime || 1 == 1 ? (
+          <Loader />
+        ) : (
+          <>
+            <div className="flex flex-col md:w-1/4 h-[200px] md:h-full overflow-y-scroll">
+              {animeData.data.map((episode) => {
                 return (
                   <div
                     key={episode.n_episodio}
@@ -141,13 +144,10 @@ function PlayerContainer({ slug }: { slug: string }) {
                   </div>
                 );
               })}
-        </div>
-        <div className="w-full flex justify-center align-middle">
-          <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
-            {!currentWatchingAnime ? (
-              "..."
-            ) : (
-              <>
+            </div>
+
+            <div className="w-full flex justify-center align-middle">
+              <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
                 <Player
                   options={{
                     autoplay: true,
@@ -166,10 +166,10 @@ function PlayerContainer({ slug }: { slug: string }) {
                 <p className="text-center mt-2 font-black">
                   Episódio {currentWatchingAnime.episodeNumber}
                 </p>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
