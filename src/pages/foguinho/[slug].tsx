@@ -8,6 +8,13 @@ import { Result, SearchResult } from "@/interfaces/SearchResult";
 import { Metadata } from "next";
 import Head from "next/head";
 import Loader from "@/components/loader";
+import { getCurves } from "crypto";
+
+interface iCurrentWatchingAnime {
+  animeTitle: string;
+  episodeNumber: string;
+  url: string;
+}
 
 async function fetchAnimeData(slug: string, page?: string) {
   const params = new URLSearchParams({ q: slug, p: page ?? "1" }).toString();
@@ -87,12 +94,7 @@ function StreamContainer({ slug }: { slug: string }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const [currentWatchingAnime, setCurrentWatchingAnime] = useState<
-    | {
-        animeTitle: string;
-        episodeNumber: string;
-        url: string;
-      }
-    | undefined
+    iCurrentWatchingAnime | undefined
   >();
 
   const handleWatchClick = (
@@ -141,6 +143,7 @@ function StreamContainer({ slug }: { slug: string }) {
           </div>
         ) : (
           <PlayerContainer
+            setCurrentWatchingAnime={setCurrentWatchingAnime}
             currentWatchingAnime={currentWatchingAnime}
             handlePlayerReady={handlePlayerReady}
           />
@@ -245,14 +248,49 @@ function EpisodesContainer({
 function PlayerContainer({
   currentWatchingAnime,
   handlePlayerReady,
+  setCurrentWatchingAnime,
 }: {
-  currentWatchingAnime: {
-    animeTitle: string;
-    episodeNumber: string;
-    url: string;
-  };
+  setCurrentWatchingAnime: (v: iCurrentWatchingAnime) => void;
+  currentWatchingAnime: iCurrentWatchingAnime;
   handlePlayerReady: (player: any) => void;
 }) {
+  const cleanUrl = (u: string) => {
+    const parsed = new URL(u);
+    const segments = parsed.pathname.split("/");
+
+    segments.pop();
+    const base = parsed.origin + segments.join("/") + "/";
+    console.log(base);
+
+    return base;
+  };
+
+  const createNextEpisodeUrl = (nextEpisodeNumber: number) => {
+    return `${cleanUrl(currentWatchingAnime.url)}${nextEpisodeNumber}`;
+  };
+
+  const haveNextEpisode = async (jump: number, nextEpisodeNumber: number) => {
+    const url = createNextEpisodeUrl(nextEpisodeNumber);
+    if (nextEpisodeNumber <= 0) return false;
+
+    const response = await fetch(url);
+    if (!response.ok) return false;
+
+    return true;
+  };
+
+  const handleEpisodeNavigation = async (jump: number) => {
+    const nextEpisodeNumber =
+      parseInt(currentWatchingAnime.episodeNumber) + jump; // -1 or + 1;
+
+    if (await haveNextEpisode(jump, nextEpisodeNumber))
+      return setCurrentWatchingAnime({
+        animeTitle: currentWatchingAnime.animeTitle,
+        episodeNumber: `${("00" + nextEpisodeNumber).slice(-3)}`,
+        url: createNextEpisodeUrl(nextEpisodeNumber),
+      });
+  };
+
   return (
     <>
       <div className="w-full flex justify-center align-middle">
@@ -272,9 +310,25 @@ function PlayerContainer({
             }}
             onReady={handlePlayerReady}
           />
-          <p className="text-center mt-2 font-black text-madoka-salmon">
-            Episódio {currentWatchingAnime.episodeNumber}
-          </p>
+          <div className="flex justify-around my-2">
+            <a
+              onClick={() => handleEpisodeNavigation(-1)}
+              className="cursor-pointer underline decoration-madoka-pink"
+            >
+              anterior
+            </a>
+
+            <p className="text-center mt-2 font-black text-madoka-salmon underline decoration-madoka-pink">
+              Episódio {currentWatchingAnime.episodeNumber}
+            </p>
+
+            <a
+              onClick={() => handleEpisodeNavigation(1)}
+              className="cursor-pointer underline decoration-madoka-pink"
+            >
+              proximo
+            </a>
+          </div>
         </div>
       </div>
     </>
