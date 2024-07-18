@@ -129,7 +129,16 @@ function StreamContainer({ slug }: { slug: string }) {
           handleWatchClick={handleWatchClick}
         />
         {!currentWatchingAnime ? (
-          ""
+          <div>
+            <h2 className="text-center ">
+              escolhe um episodio ai 👍 p vc assistir legal
+            </h2>
+            <img
+              className="p-5"
+              src="https://i.pinimg.com/originals/0b/9d/ab/0b9dab311d20da528f046fc5b25f8aaa.gif"
+              alt=""
+            />
+          </div>
         ) : (
           <PlayerContainer
             currentWatchingAnime={currentWatchingAnime}
