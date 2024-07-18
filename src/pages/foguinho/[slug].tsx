@@ -1,6 +1,7 @@
 import { AnimeEpisode, AnimeResult } from "@/interfaces/AnimeResult";
 import { useState, useRef, useEffect } from "react";
 import videojs from "video.js";
+import Image from "next/image";
 import Player from "@/components/player";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Result, SearchResult } from "@/interfaces/SearchResult";
@@ -60,12 +61,10 @@ export default function Page({
 
       <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">
         <div className="text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
-          <div className="my-auto">
-            <img src={info.image} className="w-screen" />
-          </div>
+          <img src={info.image} className="md:w-[200px]" />
           <div className="p-10">
-            <h1 className="text-xl font-bold mt-4 md:text-3xl">{info.title}</h1>
-            <p className="mt-4 text-left md:text-2xl">{info.synopsis}</p>
+            <h1 className="text-xl font-bold mt-4 md:text-xl">{info.title}</h1>
+            <p className="mt-4 text-left md:text-xl">{info.synopsis}</p>
           </div>
         </div>
       </div>
