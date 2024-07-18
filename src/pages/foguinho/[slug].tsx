@@ -76,7 +76,7 @@ export default function Page({
       </Head>
 
       <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">
-        <div className="bg-madoka-pink rounded-md text-madoka-black p-6 text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
+        <div className="bg-madoka-yellow rounded-md text-madoka-black p-6 text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
           <img src={info.image} className="shadow-xl md:w-[200px]" />
           <div className="p-10">
             <h1 className="text-xl font-bold mt-4 md:text-xl">{info.title}</h1>
