@@ -1,5 +1,5 @@
 import { AnimeEpisode, AnimeResult } from "@/interfaces/AnimeResult";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, SetStateAction } from "react";
 import videojs from "video.js";
 import Image from "next/image";
 import Player from "@/components/player";
@@ -77,18 +77,14 @@ export default function Page({
           </div>
         </div>
       </div>
-      <PlayerContainer slug={info.slug} />
+      <StreamContainer slug={info.slug} />
     </div>
   );
 }
 
-function PlayerContainer({ slug }: { slug: string }) {
+function StreamContainer({ slug }: { slug: string }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [animeData, setAnimeData] = useState<AnimeResult>();
-  const [episodes, setEpisodes] = useState<AnimeEpisode[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [index, setIndex] = useState(1);
-  const [searching, setSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [currentWatchingAnime, setCurrentWatchingAnime] = useState<
     | {
@@ -124,6 +120,46 @@ function PlayerContainer({ slug }: { slug: string }) {
     });
   };
 
+  return (
+    <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
+      <div className="flex flex-col-reverse md:flex-row m-auto md:h-3/4 md:w-2/3">
+        <EpisodesContainer
+          setIsLoading={setIsLoading}
+          slug={slug}
+          handleWatchClick={handleWatchClick}
+        />
+        {!currentWatchingAnime ? (
+          ""
+        ) : (
+          <PlayerContainer
+            currentWatchingAnime={currentWatchingAnime}
+            handlePlayerReady={handlePlayerReady}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function EpisodesContainer({
+  slug,
+  setIsLoading,
+  handleWatchClick,
+}: {
+  slug: string;
+  setIsLoading: React.Dispatch<SetStateAction<boolean>>;
+  handleWatchClick: (
+    animeTitle: string,
+    episodeNumber: string,
+    url: string,
+  ) => void;
+}) {
+  const [animeData, setAnimeData] = useState<AnimeResult>();
+  const [episodes, setEpisodes] = useState<AnimeEpisode[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [index, setIndex] = useState(1);
+  const [searching, setSearching] = useState(false);
+
   const fetch = async () => {
     const response = await fetchAnimeData(slug, `${index}`);
     // pode tirar esse if depois, só pra testar local
@@ -132,14 +168,13 @@ function PlayerContainer({ slug }: { slug: string }) {
       setHasMore(response.meta.hasNextPage);
       setAnimeData(response);
       setEpisodes((prev) => [...prev, ...response.data]);
-
-      handleWatchClick(
-        response.data[0].anime.titulo,
-        "001",
-        response.data[0].link,
-      );
     }
   };
+
+  useEffect(() => {
+    fetch();
+    setIsLoading(false);
+  }, []);
 
   async function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.value) {
@@ -168,72 +203,76 @@ function PlayerContainer({ slug }: { slug: string }) {
     }
   }
 
-  useEffect(() => {
-    fetch();
-  }, []);
-
   return (
-    <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
-      <div className="flex flex-col-reverse md:flex-row m-auto md:h-3/4 md:w-2/3">
-        {!animeData || !animeData.data || !episodes || !currentWatchingAnime ? (
-          <Loader />
+    <>
+      <div
+        className="flex flex-col md:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 md:mb-0"
+        id="scrollable-div"
+      >
+        <input
+          className="bg-madoka-black border-[1px] border-madoka-pink rounded-md mx-2 px-2"
+          placeholder="n-numero do episodi ≽^•⩊•^≼"
+          onChange={handleSearch}
+          onEmptied={() => {
+            setSearching(false);
+          }}
+          type="text"
+        ></input>
+        {searching ? (
+          ""
         ) : (
-          <>
-            <div
-              className="flex flex-col md:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 md:mb-0"
-              id="scrollable-div"
-            >
-              <input
-                className="bg-madoka-black border-[1px] border-madoka-pink rounded-md mx-2 px-2"
-                placeholder="n-numero do episodi ≽^•⩊•^≼"
-                onChange={handleSearch}
-                onEmptied={() => {
-                  setSearching(false);
-                }}
-                type="text"
-              ></input>
-              {searching ? (
-                ""
-              ) : (
-                <EpisodesContainer
-                  episodes={episodes}
-                  hasMore={hasMore}
-                  fetch={fetch}
-                  clickHandler={handleWatchClick}
-                ></EpisodesContainer>
-              )}
-            </div>
-
-            <div className="w-full flex justify-center align-middle">
-              <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
-                <Player
-                  options={{
-                    autoplay: true,
-                    controls: true,
-                    responsive: true,
-                    fluid: true,
-                    sources: [
-                      {
-                        src: currentWatchingAnime.url,
-                        type: "application/x-mpegURL",
-                      },
-                    ],
-                  }}
-                  onReady={handlePlayerReady}
-                />
-                <p className="text-center mt-2 font-black text-madoka-salmon">
-                  Episódio {currentWatchingAnime.episodeNumber}
-                </p>
-              </div>
-            </div>
-          </>
+          <Episodes
+            episodes={episodes}
+            hasMore={hasMore}
+            fetch={fetch}
+            clickHandler={handleWatchClick}
+          ></Episodes>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
-function EpisodesContainer({
+function PlayerContainer({
+  currentWatchingAnime,
+  handlePlayerReady,
+}: {
+  currentWatchingAnime: {
+    animeTitle: string;
+    episodeNumber: string;
+    url: string;
+  };
+  handlePlayerReady: (player: any) => void;
+}) {
+  return (
+    <>
+      <div className="w-full flex justify-center align-middle">
+        <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
+          <Player
+            options={{
+              autoplay: true,
+              controls: true,
+              responsive: true,
+              fluid: true,
+              sources: [
+                {
+                  src: currentWatchingAnime.url,
+                  type: "application/x-mpegURL",
+                },
+              ],
+            }}
+            onReady={handlePlayerReady}
+          />
+          <p className="text-center mt-2 font-black text-madoka-salmon">
+            Episódio {currentWatchingAnime.episodeNumber}
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Episodes({
   episodes,
   hasMore,
   fetch,
