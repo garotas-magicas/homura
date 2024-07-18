@@ -42,6 +42,15 @@ export default function Page({
 }) {
   return (
     <div className="flex flex-col h-screen bg-madoka-black font-ubuntu mt-10">
+      <button
+        onClick={() => {
+          window.location.href = "/";
+        }}
+        className="p-4 m-10 absolute top-10 border-[1px] border-madoka-pink rounded-md transition-all hover:bg-madoka-pink hover:text-madoka-black"
+      >
+        voltar
+      </button>
+
       <Head>
         <title>{info.title}</title>
         <meta
