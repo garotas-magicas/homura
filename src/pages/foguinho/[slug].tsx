@@ -76,14 +76,15 @@ export default function Page({
       </Head>
 
       <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">
-        <div className="text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
-          <img src={info.image} className="md:w-[200px]" />
+        <div className="bg-madoka-pink rounded-md text-madoka-black p-6 text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
+          <img src={info.image} className="shadow-xl md:w-[200px]" />
           <div className="p-10">
             <h1 className="text-xl font-bold mt-4 md:text-xl">{info.title}</h1>
             <p className="mt-4 text-left md:text-xl">{info.synopsis}</p>
           </div>
         </div>
       </div>
+      <hr className="w-2/3 mx-auto border-t-2 border-madoka-pink opacity-15" />
       <StreamContainer slug={info.slug} />
     </div>
   );
@@ -353,7 +354,7 @@ function Episodes({
       hasMore={hasMore}
       scrollableTarget="scrollable-div"
       dataLength={episodes.length}
-      loader={<>Carregando...</>}
+      loader={<Loader />}
       endMessage={
         <p style={{ textAlign: "center" }}>
           <b>fim do anime!</b>
