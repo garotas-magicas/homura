@@ -10,14 +10,11 @@ export const metadata: Metadata = {
 
 function Download() {
   return (
-    <button
-      onClick={() => {
-        window.location.href = "/files/madoka.exe";
-      }}
+    <a type="button" href="https://github.com/luisa-sonza/madoka-webview/releases" target="_blank"
       className="p-2 m-10 top-10 border-[1px] border-madoka-pink rounded-md transition-all hover:bg-madoka-pink hover:text-madoka-black"
     >
       Download
-    </button>
+    </a>
   )
 }
 
