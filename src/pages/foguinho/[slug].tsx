@@ -75,12 +75,12 @@ export default function Page({
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="flex justify-center items-center w-full pb-12 pt-40 md:pt-0">
-        <div className="bg-madoka-yellow rounded-md text-madoka-black p-6 text-center flex w-2/3 justify-center align-middle flex-col md:flex-row">
-          <img src={info.image} className="shadow-xl md:w-[200px]" />
+      <div className="flex justify-center items-center w-full pb-12 pt-40 xl:pt-0">
+        <div className="bg-madoka-yellow rounded-md text-madoka-black p-6 text-center flex w-2/3 justify-center align-middle flex-col xl:flex-row">
+          <img src={info.image} className="shadow-xl xl:w-[200px]" />
           <div className="p-10">
-            <h1 className="text-xl font-bold mt-4 md:text-xl">{info.title}</h1>
-            <p className="mt-4 text-left md:text-xl">{info.synopsis}</p>
+            <h1 className="text-xl font-bold mt-4 xl:text-xl">{info.title}</h1>
+            <p className="mt-4 text-left xl:text-xl">{info.synopsis}</p>
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@ function StreamContainer({ slug }: { slug: string }) {
 
   return (
     <div className="flex w-100 h-screen bg-madoka-black font-ubuntu">
-      <div className="flex flex-col-reverse md:flex-row m-auto md:h-3/4 md:w-2/3">
+      <div className="flex flex-col-reverse xl:flex-row m-auto xl:h-3/4 xl:w-2/3">
         <EpisodesContainer
           setIsLoading={setIsLoading}
           slug={slug}
@@ -219,7 +219,7 @@ function EpisodesContainer({
   return (
     <>
       <div
-        className="flex flex-col md:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 md:mb-0"
+        className="flex flex-col xl:w-1/3 overflow-y-scroll h-[400px] p-5 mb-40 xl:mb-0"
         id="scrollable-div"
       >
         <input
@@ -295,7 +295,7 @@ function PlayerContainer({
   return (
     <>
       <div className="w-full flex justify-center align-middle">
-        <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
+        <div className="w-screen xl:w-9/12 p-10 m-auto align-middle">
           <Player
             options={{
               autoplay: true,
