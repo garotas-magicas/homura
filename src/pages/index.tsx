@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SearchBar from "@/components/search";
+import SearchContainer from "@/components/search";
 import { Metadata } from "next";
 import { useState } from "react";
 
@@ -70,7 +70,7 @@ export default function Home() {
         <div className="w-100 pt-32">
           <Image src={"/renders/header.gif"} alt="" width={500} height={250} />
         </div>
-        <SearchBar />
+        <SearchContainer />
         <Download />
       </div>
     </main>
