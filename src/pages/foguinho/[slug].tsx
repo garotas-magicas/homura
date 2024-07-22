@@ -118,6 +118,11 @@ function StreamContainer({ slug }: { slug: string }) {
       url,
     });
     setPopupVisible(true);
+    const title =
+      animeTitle == "Sem título" || animeTitle == "..."
+        ? "Episódio"
+        : animeTitle;
+    document.title = `${title} - ${episodeNumber}`;
   };
 
   const playerRef = useRef(null);
