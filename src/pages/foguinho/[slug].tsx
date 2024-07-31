@@ -448,16 +448,18 @@ function Episodes({
                   <div
                     key={episode.n_episodio}
                     id={episode.n_episodio}
-                    className={`episode-list-item flex py-2 justify-between gap-2 cursor-pointer p-4  ${index % 2 == 0 ? `bg-opacity-[2%] bg-madoka-yellow` : ""}`}
-                    onClick={(e) => {
-                      clickHandler(
-                        episode.titulo_episodio,
-                        episode.n_episodio,
-                        episode.link,
-                      );
-                    }}
+                    className={`hover:border-[1px] hover:border-madoka-pink transition-all episode-list-item flex py-2 justify-between gap-2 p-4  ${index % 2 == 0 ? `bg-opacity-[2%] bg-madoka-yellow` : ""}`}
                   >
-                    <h1 className=" ">
+                    <h1
+                      onClick={(e) => {
+                        clickHandler(
+                          episode.titulo_episodio,
+                          episode.n_episodio,
+                          episode.link,
+                        );
+                      }}
+                      className="cursor-pointer transition-all hover:font-bold hover:text-madoka-pink"
+                    >
                       {episode.titulo_episodio == "Sem título" ||
                       episode.titulo_episodio == "..."
                         ? "Episódio"
