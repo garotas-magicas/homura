@@ -187,7 +187,7 @@ function StreamContainer({ slug }: { slug: string }) {
       const watched = Math.floor(
         (player.currentTime() * 100) / player.duration(),
       );
-      if (watched == 80) {
+      if (watched == 70) {
         finishEpisode();
       }
     });
