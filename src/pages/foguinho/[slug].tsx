@@ -111,11 +111,9 @@ function StreamContainer({ slug }: { slug: string }) {
 
   function finishEpisode() {
     if (currentWatchingAnime) {
-      const { animeTitle, episodeNumber, url } = currentWatchingAnime;
+      const { animeTitle, episodeNumber, slug } = currentWatchingAnime;
       const episodeOnHtmlList = document.getElementById(episodeNumber);
-      const localStoragedEpisodes = localStorage.getItem(
-        currentWatchingAnime.slug,
-      );
+      const localStoragedEpisodes = localStorage.getItem(slug);
 
       if (localStoragedEpisodes) {
         const episodes = JSON.parse(localStoragedEpisodes);
@@ -165,6 +163,7 @@ function StreamContainer({ slug }: { slug: string }) {
       slug,
     });
     setPopupVisible(true);
+
     const title =
       animeTitle == "Sem título" || animeTitle == "..."
         ? "Episódio"
@@ -187,7 +186,7 @@ function StreamContainer({ slug }: { slug: string }) {
       const watched = Math.floor(
         (player.currentTime() * 100) / player.duration(),
       );
-      if (watched == 70) {
+      if (watched > 65 && watched < 90) {
         finishEpisode();
       }
     });
