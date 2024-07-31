@@ -365,7 +365,7 @@ function Episodes({
   clickHandler: (title: string, number: string, link: string) => void;
 }) {
   function setCurrentEpisodeWatched(
-    { target }: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    { target }: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     episode: string,
   ) {
     toast.success("Episódio marcado como assistido! :)", {
