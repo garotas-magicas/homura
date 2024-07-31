@@ -14,6 +14,7 @@ interface iCurrentWatchingAnime {
   animeTitle: string;
   episodeNumber: string;
   url: string;
+  slug: string;
 }
 
 async function fetchAnimeData(slug: string, page?: string) {
@@ -108,15 +109,60 @@ function StreamContainer({ slug }: { slug: string }) {
     iCurrentWatchingAnime | undefined
   >();
 
+  function finishEpisode() {
+    if (currentWatchingAnime) {
+      const { animeTitle, episodeNumber, url } = currentWatchingAnime;
+      const episodeOnHtmlList = document.getElementById(episodeNumber);
+      const localStoragedEpisodes = localStorage.getItem(
+        currentWatchingAnime.slug,
+      );
+
+      if (localStoragedEpisodes) {
+        const episodes = JSON.parse(localStoragedEpisodes);
+        if (episodes.includes(episodeNumber)) return;
+        episodes.push(episodeNumber);
+        localStorage.setItem(
+          currentWatchingAnime.slug,
+          JSON.stringify(episodes),
+        );
+      } else {
+        localStorage.setItem(
+          currentWatchingAnime.slug,
+          JSON.stringify([episodeNumber]),
+        );
+      }
+
+      if (episodeOnHtmlList) {
+        episodeOnHtmlList.classList.add("opacity-15");
+        episodeOnHtmlList.classList.add("line-through");
+      }
+
+      toast.success("Episódio marcado como assistido! :)", {
+        position: "bottom-right",
+        style: {
+          backgroundColor: "#241e1c",
+          fontWeight: "bolder",
+          borderRadius: "0",
+
+          color: "#FFCBCF",
+        },
+        icon: undefined,
+        duration: 2000,
+      });
+    }
+  }
+
   const handleWatchClick = (
     animeTitle: string,
     episodeNumber: string,
     url: string,
+    slug: string,
   ) => {
     setCurrentWatchingAnime({
       animeTitle,
       episodeNumber,
       url,
+      slug,
     });
     setPopupVisible(true);
     const title =
@@ -135,6 +181,15 @@ function StreamContainer({ slug }: { slug: string }) {
 
     player.on("dispose", () => {
       videojs.log("player will dispose");
+    });
+
+    player.on("timeupdate", () => {
+      const watched = Math.floor(
+        (player.currentTime() * 100) / player.duration(),
+      );
+      if (watched == 80) {
+        finishEpisode();
+      }
     });
   };
 
@@ -182,6 +237,7 @@ function EpisodesContainer({
     animeTitle: string,
     episodeNumber: string,
     url: string,
+    slug: string,
   ) => void;
 }) {
   const [animeData, setAnimeData] = useState<AnimeResult>();
@@ -306,6 +362,7 @@ function PlayerContainer({
         animeTitle: currentWatchingAnime.animeTitle,
         episodeNumber: `${("00" + nextEpisodeNumber).slice(-3)}`,
         url: createNextEpisodeUrl(nextEpisodeNumber),
+        slug: currentWatchingAnime.slug,
       });
   };
 
@@ -362,7 +419,12 @@ function Episodes({
   episodes: AnimeEpisode[];
   hasMore: boolean;
   fetch: () => Promise<void>;
-  clickHandler: (title: string, number: string, link: string) => void;
+  clickHandler: (
+    title: string,
+    number: string,
+    link: string,
+    slug: string,
+  ) => void;
 }) {
   function setCurrentEpisodeWatched(
     { target }: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -456,6 +518,7 @@ function Episodes({
                           episode.titulo_episodio,
                           episode.n_episodio,
                           episode.link,
+                          episode.anime.slug_serie,
                         );
                       }}
                       className="cursor-pointer transition-all hover:font-bold hover:text-madoka-pink"
