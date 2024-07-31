@@ -8,7 +8,7 @@ import { Result, SearchResult } from "@/interfaces/SearchResult";
 import { Metadata } from "next";
 import Head from "next/head";
 import Loader from "@/components/loader";
-import { getCurves } from "crypto";
+import { toast, Toaster } from "react-hot-toast";
 
 interface iCurrentWatchingAnime {
   animeTitle: string;
@@ -51,6 +51,7 @@ export default function Page({
 
   return (
     <div className="flex flex-col h-screen bg-madoka-black font-ubuntu mt-10">
+      <Toaster />
       <button
         onClick={() => {
           window.location.href = "/";
@@ -146,15 +147,17 @@ function StreamContainer({ slug }: { slug: string }) {
           handleWatchClick={handleWatchClick}
         />
         {!currentWatchingAnime ? (
-          <div>
-            <h2 className="text-center ">
-              escolhe um episodio ai 👍 p vc assistir legal
-            </h2>
-            <img
-              className="p-5"
-              src="https://i.pinimg.com/originals/0b/9d/ab/0b9dab311d20da528f046fc5b25f8aaa.gif"
-              alt=""
-            />
+          <div className="w-full flex justify-center align-middle">
+            <div className="w-screen md:w-9/12 p-10 m-auto align-middle">
+              <h2 className="text-center ">
+                escolhe um episodio ai 👍 p vc assistir legal
+              </h2>
+              <img
+                className="p-5"
+                src="https://i.pinimg.com/originals/0b/9d/ab/0b9dab311d20da528f046fc5b25f8aaa.gif"
+                alt=""
+              />
+            </div>
           </div>
         ) : (
           <PlayerContainer
@@ -361,6 +364,68 @@ function Episodes({
   fetch: () => Promise<void>;
   clickHandler: (title: string, number: string, link: string) => void;
 }) {
+  function setCurrentEpisodeWatched(
+    { target }: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    episode: string,
+  ) {
+    toast.success("Episódio marcado como assistido! :)", {
+      position: "bottom-right",
+      style: {
+        backgroundColor: "#241e1c",
+        fontWeight: "bolder",
+        borderRadius: "0",
+
+        color: "#FFCBCF",
+      },
+      icon: undefined,
+      duration: 2000,
+    });
+    const watchedEpisodes = localStorage.getItem(episodes[0].anime.slug_serie);
+
+    (target as HTMLElement).parentElement!.parentElement!.classList.add(
+      "opacity-15",
+    );
+    (target as HTMLElement).parentElement!.parentElement!.classList.add(
+      "line-through",
+    );
+
+    if (watchedEpisodes) {
+      const parsed = JSON.parse(watchedEpisodes);
+      if (parsed.includes(episode)) return;
+      localStorage.setItem(
+        episodes[0].anime.slug_serie,
+        JSON.stringify([...parsed, episode]),
+      );
+    } else {
+      localStorage.setItem(
+        episodes[0].anime.slug_serie,
+        JSON.stringify([episode]),
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (episodes && episodes.length > 0) {
+      const watchedEpisodes = localStorage.getItem(
+        episodes[0].anime.slug_serie,
+      );
+
+      if (watchedEpisodes && watchedEpisodes.length > 0) {
+        const parsed = JSON.parse(watchedEpisodes);
+        const episodes = document.querySelectorAll(".episode-list-item");
+        parsed.forEach((episode: string) => {
+          episodes.forEach((e) => {
+            if (e.id == episode) {
+              e.classList.add("line-through");
+              e.classList.add("opacity-15");
+              return;
+            }
+          });
+        });
+      }
+    }
+  }, [episodes]);
+
   return (
     <InfiniteScroll
       // wtf typecsript
@@ -382,8 +447,9 @@ function Episodes({
                 return (
                   <div
                     key={episode.n_episodio}
-                    className={`flex py-2 justify-between gap-2 cursor-pointer p-4  ${index % 2 == 0 ? `bg-opacity-[2%] bg-madoka-yellow` : ""}`}
-                    onClick={() => {
+                    id={episode.n_episodio}
+                    className={`episode-list-item flex py-2 justify-between gap-2 cursor-pointer p-4  ${index % 2 == 0 ? `bg-opacity-[2%] bg-madoka-yellow` : ""}`}
+                    onClick={(e) => {
                       clickHandler(
                         episode.titulo_episodio,
                         episode.n_episodio,
@@ -397,9 +463,19 @@ function Episodes({
                         ? "Episódio"
                         : episode.titulo_episodio}
                     </h1>
-                    <p className="font-bold text-madoka-pink">
-                      {episode.n_episodio}
-                    </p>
+                    <div className="flex flex-row-reverse gap-2">
+                      <button
+                        onClick={(e) =>
+                          setCurrentEpisodeWatched(e, episode.n_episodio)
+                        }
+                        className="font-black underline text-madoka-yellow"
+                      >
+                        +
+                      </button>
+                      <p className="font-bold text-madoka-pink">
+                        {episode.n_episodio}
+                      </p>
+                    </div>
                   </div>
                 );
               })
